@@ -4,8 +4,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.url.ISimpleURL;
+import com.helger.commons.url.SimpleURL;
 import com.helger.html.hc.IHCNode;
 import com.helger.html.hc.html.grouping.HCDiv;
+import com.helger.html.hc.html.grouping.HCP;
+import com.helger.html.hc.html.textlevel.HCA;
 import com.helger.html.hc.html.textlevel.HCSpan;
 import com.helger.html.hc.impl.HCNodeList;
 import com.helger.peppol.app.AppHelper;
@@ -44,6 +47,10 @@ public final class LayoutAreaContentProviderPublic
     final BootstrapNavbar aNavbar = new BootstrapNavbar ();
     aNavbar.addBrand (new HCSpan ().addClass (AppCommonUI.CSS_CLASS_LOGO1).addChild (AppHelper.getApplicationTitle ()),
                       aLinkToStartPage);
+
+    final ISimpleURL aURL = new SimpleURL ("https://github.com/phax/smp-query-webapp");
+    aNavbar.addAndReturnText ().addChild ("Latest version:").addClass (CBootstrapCSS.MR_2);
+    aNavbar.addBrand (new HCSpan ().addChild (aURL.getAsStringWithoutEncodedParameters ()), aURL);
 
     return aNavbar;
   }
@@ -109,6 +116,17 @@ public final class LayoutAreaContentProviderPublic
 
       // content
       aCol2.addChild (getPageContent (aLEC));
+    }
+
+    // Footer
+    {
+      final BootstrapContainer aFooter = new BootstrapContainer ().setFluid (true).setID (CLayout.LAYOUT_AREAID_FOOTER);
+
+      aFooter.addChild (new HCP ().addChild (AppHelper.getApplicationTitle () + " - created by Philip Helger")
+                                  .addChild (" - GitHub: ")
+                                  .addChild (new HCA (new SimpleURL ("https://github.com/phax/smp-query-webapp")).addChild ("phax/smp-query-webapp")));
+
+      ret.addChild (aFooter);
     }
 
     return ret;
