@@ -19,7 +19,7 @@ docker build --pull -t phelger/smpqwa .
 
 ## Running
 
-Running the Docker image:
+Running the Docker image (deployed to Docker Hub):
 
 ```
 docker run -d --name smpqwa -p 8080:8080 phelger/smpqwa
