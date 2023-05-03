@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" 
+         xmlns="http://java.sun.com/xml/ns/javaee" 
+         metadata-complete="false">
+  <display-name>SMP QueryWebApp</display-name>
+  <description>SMP QueryWebApp</description>
+  
+  <session-config>
+    <session-timeout>60</session-timeout>
+  </session-config>
+  
+  <!-- The welcome file is only required for the initial redirect -->
+  <welcome-file-list>
+    <welcome-file>public</welcome-file>
+  </welcome-file-list>
+  
+  <!-- Application specific stuff -->  
+
+  <listener>
+    <listener-class>com.helger.peppol.servlet.AppWebAppListener</listener-class>
+  </listener>
+  
+  <filter>
+    <filter-name>SecureLoginFilter</filter-name>
+    <filter-class>com.helger.peppol.servlet.SecureLoginFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>SecureLoginFilter</filter-name>
+    <url-pattern>/secure/*</url-pattern>
+  </filter-mapping>
+  
+  <servlet>
+    <servlet-name>SecureApplicationServlet</servlet-name>
+    <servlet-class>com.helger.peppol.servlet.SecureApplicationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SecureApplicationServlet</servlet-name>
+    <url-pattern>/secure/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>PublicApplicationServlet</servlet-name>
+    <servlet-class>com.helger.peppol.servlet.PublicApplicationServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PublicApplicationServlet</servlet-name>
+    <url-pattern>/public/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet>
+    <servlet-name>AppRootServlet</servlet-name>
+    <servlet-class>com.helger.peppol.servlet.AppRootServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AppRootServlet</servlet-name>
+    <url-pattern></url-pattern>
+  </servlet-mapping>
+</web-app>
