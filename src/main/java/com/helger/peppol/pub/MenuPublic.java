@@ -4,7 +4,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.peppol.ui.page.AppPageViewExternal;
+import com.helger.peppol.ui.AppPageViewExternal;
 import com.helger.photon.core.menu.IMenuTree;
 
 @Immutable

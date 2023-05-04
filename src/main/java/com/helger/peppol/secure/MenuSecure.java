@@ -3,6 +3,7 @@ package com.helger.peppol.secure;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
+import com.helger.peppol.app.AppSecurity;
 import com.helger.peppol.app.CPPApp;
 import com.helger.photon.bootstrap4.pages.BootstrapPagesMenuConfigurator;
 import com.helger.photon.bootstrap4.pages.security.BasePageSecurityChangePassword;
@@ -22,7 +23,7 @@ public final class MenuSecure
   {
     // We need this additional indirection layer, as the pages are initialized
     // statically!
-    final MenuObjectFilterUserAssignedToUserGroup aFilterAdministrators = new MenuObjectFilterUserAssignedToUserGroup (CPPApp.USERGROUP_ADMINISTRATORS_ID);
+    final MenuObjectFilterUserAssignedToUserGroup aFilterAdministrators = new MenuObjectFilterUserAssignedToUserGroup (AppSecurity.USERGROUP_ADMINISTRATORS_ID);
 
     // Administrator
     {

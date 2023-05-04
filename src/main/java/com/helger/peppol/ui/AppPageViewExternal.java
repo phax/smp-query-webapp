@@ -1,4 +1,4 @@
-package com.helger.peppol.ui.page;
+package com.helger.peppol.ui;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

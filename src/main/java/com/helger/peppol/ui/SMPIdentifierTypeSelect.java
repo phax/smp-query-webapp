@@ -1,4 +1,4 @@
-package com.helger.peppol.ui.select;
+package com.helger.peppol.ui;
 
 import java.util.Locale;
 
