@@ -33,3 +33,8 @@ Deployment:
 docker login -u phelger
 docker push phelger/smpqwa
 ```
+
+---
+
+My personal [Coding Styleguide](https://github.com/phax/meta/blob/master/CodingStyleguide.md) |
+It is appreciated if you star the GitHub project if you like it.
