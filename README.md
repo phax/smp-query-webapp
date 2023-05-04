@@ -3,6 +3,12 @@
 Small web application that allows an arbitrary SMP query and returns JSON results
 This is the API subset parts from https://peppol.helger.com for standalone usage.
 
+## Supported query APIs
+
+* SMP query all document types of a participant
+* SMP query all endpoints of a participant for a certain document type
+* SMP query the Business Card of a participant
+
 ## Building from source
 
 ```
