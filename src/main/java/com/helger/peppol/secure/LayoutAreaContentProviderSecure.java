@@ -6,7 +6,6 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.url.ISimpleURL;
 import com.helger.html.hc.IHCNode;
-import com.helger.html.hc.html.IHCElement;
 import com.helger.html.hc.html.grouping.HCDiv;
 import com.helger.html.hc.html.textlevel.HCSpan;
 import com.helger.html.hc.html.textlevel.HCStrong;
@@ -54,8 +53,8 @@ public final class LayoutAreaContentProviderSecure
     final BootstrapNavbar aNavbar = new BootstrapNavbar ();
     aNavbar.addBrand (new HCNodeList ().addChild (new HCSpan ().addClass (AppCommonUI.CSS_CLASS_LOGO1)
                                                                .addChild (AppHelper.getApplicationTitle ()))
-                                       .addChild (new HCSpan ().addClass (AppCommonUI.CSS_CLASS_LOGO2).addChild (" Administration")),
-                      aLinkToStartPage);
+                                       .addChild (new HCSpan ().addClass (AppCommonUI.CSS_CLASS_LOGO2)
+                                                               .addChild (" Administration")), aLinkToStartPage);
 
     final BootstrapNavbarToggleable aToggleable = aNavbar.addAndReturnToggleable ();
 
@@ -79,13 +78,6 @@ public final class LayoutAreaContentProviderSecure
   }
 
   @Nonnull
-  public static IHCElement <?> getMenuContent (@Nonnull final LayoutExecutionContext aLEC)
-  {
-    final IHCElement <?> ret = BootstrapMenuItemRenderer.createSideBarMenu (aLEC);
-    return ret;
-  }
-
-  @Nonnull
   public static IHCNode getContent (@Nonnull final LayoutExecutionContext aLEC)
   {
     final HCNodeList ret = new HCNodeList ();
@@ -105,13 +97,15 @@ public final class LayoutAreaContentProviderSecure
     // Content
     {
       final HCDiv aRow = aOuterContainer.addAndReturnChild (new HCDiv ().addClass (CBootstrapCSS.D_MD_FLEX));
-      final HCDiv aCol1 = aRow.addAndReturnChild (new HCDiv ().addClass (CBootstrapCSS.D_MD_FLEX).addClass (CBootstrapCSS.MR_2));
+      final HCDiv aCol1 = aRow.addAndReturnChild (new HCDiv ().addClass (CBootstrapCSS.D_MD_FLEX)
+                                                              .addClass (CBootstrapCSS.MR_2));
       final HCDiv aCol2 = aRow.addAndReturnChild (new HCDiv ().addClass (CBootstrapCSS.FLEX_FILL));
 
       // left
       // We need a wrapper span for easy AJAX content replacement
       aCol1.addClass (CBootstrapCSS.D_PRINT_NONE)
-           .addChild (new HCSpan ().setID (CLayout.LAYOUT_AREAID_MENU).addChild (getMenuContent (aLEC)));
+           .addChild (new HCSpan ().setID (CLayout.LAYOUT_AREAID_MENU)
+                                   .addChild (BootstrapMenuItemRenderer.createSideBarMenu (aLEC)));
       aCol1.addChild (new HCDiv ().setID (CLayout.LAYOUT_AREAID_SPECIAL));
 
       // content - determine is exactly same as for view
