@@ -36,6 +36,7 @@ import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.factory.SimpleIdentifierFactory;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.servlet.response.UnifiedResponse;
+import com.helger.smpclient.httpclient.SMPHttpClientSettings;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 public final class APISMPQueryGetBusinessCard extends AbstractAPIExecutor
@@ -43,11 +44,11 @@ public final class APISMPQueryGetBusinessCard extends AbstractAPIExecutor
   private static final Logger LOGGER = LoggerFactory.getLogger (APISMPQueryGetBusinessCard.class);
 
   @Override
-  protected void rateLimitedInvokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                                       @Nonnull @Nonempty final String sPath,
-                                       @Nonnull final Map <String, String> aPathVariables,
-                                       @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                                       @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
+  public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                         @Nonnull @Nonempty final String sPath,
+                         @Nonnull final Map <String, String> aPathVariables,
+                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
+                         @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
   {
     final ISMLConfigurationManager aSMLConfigurationMgr = PPMetaManager.getSMLConfigurationMgr ();
     final String sSMLID = aPathVariables.get (PPAPI.PARAM_SML_ID);
@@ -124,7 +125,11 @@ public final class APISMPQueryGetBusinessCard extends AbstractAPIExecutor
                           aParticipantID.getURIEncoded ();
     LOGGER.info (sLogPrefix + "Querying BC from '" + sBCURL + "'");
     byte [] aData;
-    try (final HttpClientManager aHttpClientMgr = new HttpClientManager ())
+
+    final SMPHttpClientSettings aHCS = new SMPHttpClientSettings ();
+    aHCS.setUserAgent (USER_AGENT);
+
+    try (final HttpClientManager aHttpClientMgr = HttpClientManager.create (aHCS))
     {
       final HttpGet aGet = new HttpGet (sBCURL);
       aData = aHttpClientMgr.execute (aGet, new ResponseHandlerByteArray ());
