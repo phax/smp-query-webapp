@@ -10,7 +10,6 @@ import com.helger.photon.bootstrap4.pages.security.BasePageSecurityChangePasswor
 import com.helger.photon.core.menu.IMenuItemPage;
 import com.helger.photon.core.menu.IMenuTree;
 import com.helger.photon.core.menu.filter.MenuObjectFilterUserAssignedToUserGroup;
-import com.helger.photon.uicore.page.WebPageExecutionContext;
 import com.helger.photon.uicore.page.system.BasePageShowChildren;
 
 @Immutable
@@ -27,12 +26,11 @@ public final class MenuSecure
 
     // Administrator
     {
-      final IMenuItemPage aAdmin = aMenuTree.createRootItem (new BasePageShowChildren <WebPageExecutionContext> (CMenuSecure.MENU_ADMIN,
-                                                                                                                 "Administration",
-                                                                                                                 aMenuTree));
+      final IMenuItemPage aAdmin = aMenuTree.createRootItem (new BasePageShowChildren <> (CMenuSecure.MENU_ADMIN,
+                                                                                          "Administration",
+                                                                                          aMenuTree));
       // Must be accessible for all Config users
-      aMenuTree.createItem (aAdmin,
-                            new BasePageSecurityChangePassword <WebPageExecutionContext> (CMenuSecure.MENU_ADMIN_CHANGE_PASSWORD));
+      aMenuTree.createItem (aAdmin, new BasePageSecurityChangePassword <> (CMenuSecure.MENU_ADMIN_CHANGE_PASSWORD));
 
       // Admins only
       aMenuTree.createItem (aAdmin, new PageSecureAdminAddons (CMenuSecure.MENU_ADMIN_ADDONS))
