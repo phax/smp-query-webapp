@@ -17,7 +17,7 @@ mvn clean install
 
 Output: `target/*.war`
 
-Afterwars build Docker image:
+Afterwards build Docker image:
 
 ```
 docker build --pull -t phelger/smpqwa .
