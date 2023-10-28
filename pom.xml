@@ -23,8 +23,8 @@
   </licenses>
        
   <scm>
-    <connection>scm:git:git@github.com:phax/smp-query-webapp.git</connection>
-    <developerConnection>scm:git:git@github.com:phax/smp-query-webapp.git</developerConnection>
+    <connection>scm:git:https://github.com/phax/smp-query-webapp.git</connection>
+    <developerConnection>scm:git:https://github.com/phax/smp-query-webapp.git</developerConnection>
     <url>http://github.com/phax/smp-query-webapp</url>
     <tag>HEAD</tag>
   </scm>
@@ -47,7 +47,7 @@
     <m2e.jaxrs.activation>false</m2e.jaxrs.activation>
     <m2e.jpa.activation>false</m2e.jpa.activation>
     <m2e.jsf.activation>false</m2e.jsf.activation>
-    <log4j.version>2.20.0</log4j.version>
+    <log4j.version>2.21.1</log4j.version>
   </properties>
   
   <dependencyManagement>
@@ -90,14 +90,14 @@
       <dependency>
         <groupId>com.helger.photon</groupId>
         <artifactId>ph-oton-parent-pom</artifactId>
-        <version>9.2.0</version>
+        <version>9.2.1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>phoss-directory-parent-pom</artifactId>
-        <version>0.12.1</version>
+        <version>0.12.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

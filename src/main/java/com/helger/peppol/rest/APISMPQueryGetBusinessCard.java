@@ -22,7 +22,6 @@ import com.helger.commons.mime.CMimeType;
 import com.helger.commons.timing.StopWatch;
 import com.helger.httpclient.HttpClientManager;
 import com.helger.httpclient.response.ResponseHandlerByteArray;
-import com.helger.jaxb.validation.DoNothingValidationEventHandler;
 import com.helger.json.IJsonObject;
 import com.helger.json.serialize.JsonWriter;
 import com.helger.json.serialize.JsonWriterSettings;
@@ -143,11 +142,7 @@ public final class APISMPQueryGetBusinessCard extends AbstractAPIExecutor
       LOGGER.warn (sLogPrefix + "No Business Card is available for that participant.");
     else
     {
-      final PDBusinessCard aBC = PDBusinessCardHelper.parseBusinessCard (aData, m -> {
-        m.readExceptionCallbacks ().removeAll ();
-        m.setValidationEventHandler (new DoNothingValidationEventHandler ());
-        m.setCharset (StandardCharsets.UTF_8);
-      });
+      final PDBusinessCard aBC = PDBusinessCardHelper.parseBusinessCard (aData, StandardCharsets.UTF_8);
       if (aBC == null)
       {
         LOGGER.error (sLogPrefix + "Failed to parse BC:\n" + new String (aData));
