@@ -83,7 +83,7 @@
       <dependency>
         <groupId>com.helger.peppol</groupId>
         <artifactId>peppol-commons-parent-pom</artifactId>
-        <version>9.0.8</version>
+        <version>9.1.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -91,13 +91,6 @@
         <groupId>com.helger.photon</groupId>
         <artifactId>ph-oton-parent-pom</artifactId>
         <version>9.2.1</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.helger</groupId>
-        <artifactId>phoss-directory-parent-pom</artifactId>
-        <version>0.12.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -143,8 +136,9 @@
       <artifactId>peppol-smp-client</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>phoss-directory-businesscard</artifactId>
+      <groupId>com.helger.peppol</groupId>
+      <artifactId>peppol-directory-businesscard</artifactId>
+      <version>9.1.0</version>
     </dependency>
    
     <dependency>
