@@ -87,6 +87,12 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
+      <!--error in 9.1.0 parent pom -->
+      <dependency>
+        <groupId>com.helger.peppol</groupId>
+        <artifactId>peppol-directory-businesscard</artifactId>
+        <version>9.1.0</version>
+      </dependency>
       <dependency>
         <groupId>com.helger.photon</groupId>
         <artifactId>ph-oton-parent-pom</artifactId>
@@ -138,7 +144,6 @@
     <dependency>
       <groupId>com.helger.peppol</groupId>
       <artifactId>peppol-directory-businesscard</artifactId>
-      <version>9.1.0</version>
     </dependency>
    
     <dependency>
