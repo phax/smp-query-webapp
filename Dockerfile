@@ -17,7 +17,7 @@
 
 # Part 1:
 
-FROM ubuntu:latest as build
+FROM ubuntu:latest AS build
 
 # Install unzip
 RUN apt-get update \
