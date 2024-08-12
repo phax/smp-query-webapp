@@ -3,6 +3,8 @@
 Small web application that allows an arbitrary SMP query and returns JSON results
 This is the API subset parts from https://peppol.helger.com for standalone usage.
 
+This project is part of my Peppol solution stack. See https://github.com/phax/peppol for other components and libraries in that area.
+
 ## Supported query APIs
 
 * SMP query all document types of a participant
