@@ -31,7 +31,7 @@ RUN unzip phax.war -d /phax
 
 # Part 2:
     
-FROM tomcat:10-jdk11
+FROM tomcat:10-jdk21
 
 ENV CATALINA_OPTS="$CATALINA_OPTS -Djava.security.egd=file:/dev/urandom"
 
