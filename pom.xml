@@ -65,7 +65,7 @@
     <m2e.jaxrs.activation>false</m2e.jaxrs.activation>
     <m2e.jpa.activation>false</m2e.jpa.activation>
     <m2e.jsf.activation>false</m2e.jsf.activation>
-    <log4j.version>2.24.0</log4j.version>
+    <log4j.version>2.24.3</log4j.version>
   </properties>
   
   <dependencyManagement>
@@ -73,7 +73,7 @@
       <dependency>
         <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>11.1.8</version>
+        <version>11.1.11</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -87,7 +87,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-css-parent-pom</artifactId>
-        <version>7.0.2</version>
+        <version>7.0.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -101,14 +101,14 @@
       <dependency>
         <groupId>com.helger.peppol</groupId>
         <artifactId>peppol-commons-parent-pom</artifactId>
-        <version>9.5.1</version>
+        <version>9.7.2</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.photon</groupId>
         <artifactId>ph-oton-parent-pom</artifactId>
-        <version>9.2.6</version>
+        <version>9.2.7</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
