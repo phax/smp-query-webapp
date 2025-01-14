@@ -11,6 +11,8 @@ This project is part of my Peppol solution stack. See https://github.com/phax/pe
 * SMP query all endpoints of a participant for a certain document type
 * SMP query the Business Card of a participant
 
+See https://peppol.helger.com/public/locale-en_US/menuitem-tools-rest-api for the full API description.
+
 ## Building from source
 
 ```
