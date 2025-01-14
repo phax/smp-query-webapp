@@ -16,11 +16,17 @@
  */
 package com.helger.peppol.rest;
 
+import java.util.function.Consumer;
+
 import com.helger.photon.api.IAPIExecutor;
+import com.helger.smpclient.httpclient.SMPHttpClientSettings;
 
 public abstract class AbstractAPIExecutor implements IAPIExecutor
 {
   protected static final String USER_AGENT = "SMP-Query-WebApp/1.0";
+  public static final Consumer <? super SMPHttpClientSettings> SMP_HCS_MODIFIER = hcs -> {
+    hcs.setUserAgent (USER_AGENT);
+  };
 
   protected AbstractAPIExecutor ()
   {}

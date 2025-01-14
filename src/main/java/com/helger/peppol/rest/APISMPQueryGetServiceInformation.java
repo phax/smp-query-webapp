@@ -16,8 +16,6 @@
  */
 package com.helger.peppol.rest;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -49,13 +47,18 @@ import com.helger.peppolid.peppol.PeppolIdentifierHelper;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.servlet.response.UnifiedResponse;
 import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
+import com.helger.smpclient.bdxr2.BDXR2ClientReadOnly;
 import com.helger.smpclient.json.SMPJsonResponse;
 import com.helger.smpclient.peppol.PeppolWildcardSelector.EMode;
+import com.helger.smpclient.peppol.Pfuoi420;
 import com.helger.smpclient.peppol.SMPClientReadOnly;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
 {
+  public static final String PARAM_VERIFY_SIGNATURE = "verifySignature";
+  public static final String PARAM_XML_SCHEMA_VALIDATION = "xmlSchemaValidation";
+
   private static final Logger LOGGER = LoggerFactory.getLogger (APISMPQueryGetServiceInformation.class);
 
   @Override
@@ -82,30 +85,23 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
     if (aDTID == null)
       throw new APIParamException ("Invalid document type ID '" + sDocTypeID + "' provided.");
 
-    final boolean bXMLSchemaValidation = aRequestScope.params ().getAsBoolean ("xmlSchemaValidation", true);
-    final boolean bVerifySignature = aRequestScope.params ().getAsBoolean ("verifySignature", true);
+    final boolean bXMLSchemaValidation = aRequestScope.params ().getAsBoolean (PARAM_XML_SCHEMA_VALIDATION, true);
+    final boolean bVerifySignature = aRequestScope.params ().getAsBoolean (PARAM_VERIFY_SIGNATURE, true);
 
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
 
-    SMPQueryParams aQueryParams = null;
+    SMPQueryParams aSMPQueryParams = null;
     if (bSMLAutoDetect)
     {
       for (final ISMLConfiguration aCurSML : aSMLConfigurationMgr.getAllSorted ())
       {
-        aQueryParams = SMPQueryParams.createForSML (aCurSML, aPID.getScheme (), aPID.getValue (), false);
-        if (aQueryParams == null)
-          continue;
-        try
+        aSMPQueryParams = SMPQueryParams.createForSMLOrNull (aCurSML, aPID.getScheme (), aPID.getValue (), false);
+        if (aSMPQueryParams != null && aSMPQueryParams.isSMPRegisteredInDNS ())
         {
-          InetAddress.getByName (aQueryParams.getSMPHostURI ().getHost ());
           // Found it
           aSML = aCurSML;
           break;
-        }
-        catch (final UnknownHostException ex)
-        {
-          // continue
         }
       }
 
@@ -118,28 +114,28 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
     }
     else
     {
-      aQueryParams = SMPQueryParams.createForSML (aSML, aPID.getScheme (), aPID.getValue (), true);
+      aSMPQueryParams = SMPQueryParams.createForSMLOrNull (aSML, aPID.getScheme (), aPID.getValue (), true);
     }
-    if (aQueryParams == null)
+    if (aSMPQueryParams == null)
       throw new APIParamException ("Failed to resolve participant ID '" +
                                    sParticipantID +
                                    "' for the provided SML '" +
                                    aSML.getID () +
                                    "'");
 
-    final IParticipantIdentifier aParticipantID = aQueryParams.getParticipantID ();
-    final IDocumentTypeIdentifier aDocTypeID = aQueryParams.getIF ()
-                                                           .createDocumentTypeIdentifier (aDTID.getScheme (),
-                                                                                          aDTID.getValue ());
+    final IParticipantIdentifier aParticipantID = aSMPQueryParams.getParticipantID ();
+    final IDocumentTypeIdentifier aDocTypeID = aSMPQueryParams.getIF ()
+                                                              .createDocumentTypeIdentifier (aDTID.getScheme (),
+                                                                                             aDTID.getValue ());
     if (aDocTypeID == null)
       throw new APIParamException ("Invalid document type ID '" + sDocTypeID + "' provided.");
 
     LOGGER.info ("[API] Participant information of '" +
                  aParticipantID.getURIEncoded () +
                  "' is queried using SMP API '" +
-                 aQueryParams.getSMPAPIType () +
+                 aSMPQueryParams.getSMPAPIType () +
                  "' from '" +
-                 aQueryParams.getSMPHostURI () +
+                 aSMPQueryParams.getSMPHostURI () +
                  "' using SML '" +
                  aSML.getID () +
                  "' for document type '" +
@@ -150,15 +146,17 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
                  bVerifySignature);
 
     IJsonObject aJson = null;
-    switch (aQueryParams.getSMPAPIType ())
+    switch (aSMPQueryParams.getSMPAPIType ())
     {
       case PEPPOL:
       {
-        final SMPClientReadOnly aSMPClient = new SMPClientReadOnly (aQueryParams.getSMPHostURI ());
-        aSMPClient.httpClientSettings ().setUserAgent (USER_AGENT);
+        final SMPClientReadOnly aSMPClient = new SMPClientReadOnly (aSMPQueryParams.getSMPHostURI ());
+        aSMPClient.setSecureValidation (false);
+        aSMPClient.withHttpClientSettings (SMP_HCS_MODIFIER);
         aSMPClient.setXMLSchemaValidation (bXMLSchemaValidation);
         aSMPClient.setVerifySignature (bVerifySignature);
 
+        @Pfuoi420
         final com.helger.xsds.peppol.smp1.SignedServiceMetadataType aSSM;
         if (PeppolIdentifierHelper.DOCUMENT_TYPE_SCHEME_PEPPOL_DOCTYPE_WILDCARD.equals (aDocTypeID.getScheme ()))
           aSSM = aSMPClient.getWildcardServiceMetadataOrNull (aParticipantID, aDocTypeID, EMode.BUSDOX_THEN_WILDCARD);
@@ -173,8 +171,9 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
       }
       case OASIS_BDXR_V1:
       {
-        final BDXRClientReadOnly aBDXR1Client = new BDXRClientReadOnly (aQueryParams.getSMPHostURI ());
-        aBDXR1Client.httpClientSettings ().setUserAgent (USER_AGENT);
+        final BDXRClientReadOnly aBDXR1Client = new BDXRClientReadOnly (aSMPQueryParams.getSMPHostURI ());
+        aBDXR1Client.setSecureValidation (false);
+        aBDXR1Client.withHttpClientSettings (SMP_HCS_MODIFIER);
         aBDXR1Client.setXMLSchemaValidation (bXMLSchemaValidation);
         aBDXR1Client.setVerifySignature (bVerifySignature);
 
@@ -183,6 +182,22 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
         if (aSSM != null)
         {
           final com.helger.xsds.bdxr.smp1.ServiceMetadataType aSM = aSSM.getServiceMetadata ();
+          aJson = SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM);
+        }
+        break;
+      }
+      case OASIS_BDXR_V2:
+      {
+        final BDXR2ClientReadOnly aBDXR2Client = new BDXR2ClientReadOnly (aSMPQueryParams.getSMPHostURI ());
+        aBDXR2Client.setSecureValidation (false);
+        aBDXR2Client.withHttpClientSettings (SMP_HCS_MODIFIER);
+        aBDXR2Client.setXMLSchemaValidation (bXMLSchemaValidation);
+        aBDXR2Client.setVerifySignature (bVerifySignature);
+
+        final com.helger.xsds.bdxr.smp2.ServiceMetadataType aSM = aBDXR2Client.getServiceMetadataOrNull (aParticipantID,
+                                                                                                         aDocTypeID);
+        if (aSM != null)
+        {
           aJson = SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM);
         }
         break;

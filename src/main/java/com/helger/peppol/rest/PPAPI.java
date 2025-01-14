@@ -55,8 +55,7 @@ public final class PPAPI
                                                                               PARAM_SML_ID +
                                                                               "}/{" +
                                                                               PARAM_PARTICIPANT_ID +
-                                                                              "}"),
-                                                                 new APISMPQueryGetDocTypes ());
+                                                                              "}"), new APISMPQueryGetDocTypes ());
       aSMPQueryDocTypes.setExceptionMapper (aExceptionMapper);
       aAPIRegistry.registerAPI (aSMPQueryDocTypes);
     }
