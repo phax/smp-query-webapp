@@ -31,6 +31,7 @@ import com.helger.html.jscode.JSAssocArray;
 import com.helger.peppol.app.ajax.CAjax;
 import com.helger.peppol.domain.NiceNameEntry;
 import com.helger.peppolid.factory.PeppolIdentifierFactory;
+import com.helger.peppolid.peppol.EPeppolCodeListItemState;
 import com.helger.photon.bootstrap4.ext.BootstrapSystemMessage;
 import com.helger.photon.bootstrap4.uictrls.datatables.BootstrapDataTables;
 import com.helger.photon.core.requestparam.RequestParameterHandlerURLPathNamed;
@@ -71,20 +72,20 @@ public final class AppCommonUI
     for (final com.helger.peppolid.peppol.doctype.EPredefinedDocumentTypeIdentifier e : com.helger.peppolid.peppol.doctype.EPredefinedDocumentTypeIdentifier.values ())
       DOCTYPE_NAMES.put (e.getURIEncoded (),
                          new NiceNameEntry (_ensurePrefix ("Peppol ", e.getCommonName ()),
-                                            e.isDeprecated (),
+                                            e.getState (),
                                             e.getAllProcessIDs ()));
     for (final com.helger.peppolid.peppol.process.EPredefinedProcessIdentifier e : com.helger.peppolid.peppol.process.EPredefinedProcessIdentifier.values ())
-      PROCESS_NAMES.put (e.getURIEncoded (), new NiceNameEntry ("Peppol predefined", e.isDeprecated (), null));
+      PROCESS_NAMES.put (e.getURIEncoded (), new NiceNameEntry ("Peppol predefined", e.getState (), null));
 
     // Custom document types
     final PeppolIdentifierFactory PIF = PeppolIdentifierFactory.INSTANCE;
     DOCTYPE_NAMES.put ("busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:Invoice-2::Invoice##urn:www.cenbii.eu:transaction:biitrns010:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:e-fff:ver3.0::2.1",
                        new NiceNameEntry ("e-FFF 3.0 Invoice",
-                                          true,
+                                          EPeppolCodeListItemState.DEPRECATED,
                                           new CommonsArrayList <> (PIF.createProcessIdentifierWithDefaultScheme ("urn:www.cenbii.eu:profile:bii05:ver1.0"))));
     DOCTYPE_NAMES.put ("busdox-docid-qns::urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2::CreditNote##urn:www.cenbii.eu:transaction:biitrns014:ver2.0:extended:urn:www.peppol.eu:bis:peppol5a:ver2.0:extended:e-fff:ver3.0::2.1",
                        new NiceNameEntry ("e-FFF 3.0 CreditNote",
-                                          true,
+                                          EPeppolCodeListItemState.DEPRECATED,
                                           new CommonsArrayList <> (PIF.createProcessIdentifierWithDefaultScheme ("urn:www.cenbii.eu:profile:bii05:ver1.0"))));
   }
 
