@@ -33,7 +33,7 @@ RUN unzip phax.war -d /phax
     
 FROM tomcat:10-jdk21
 
-ENV CATALINA_OPTS="$CATALINA_OPTS -Djava.security.egd=file:/dev/urandom"
+ENV CATALINA_OPTS="-Djava.security.egd=file:/dev/urandom"
 
 WORKDIR $CATALINA_HOME/webapps
 RUN rm -rf manager host-manager docs examples ROOT
