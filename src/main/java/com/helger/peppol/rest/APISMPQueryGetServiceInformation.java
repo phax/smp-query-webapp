@@ -58,7 +58,6 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
 
   private static final Logger LOGGER = LoggerFactory.getLogger (APISMPQueryGetServiceInformation.class);
 
-  @SuppressWarnings ({ "removal", "deprecation" })
   @Override
   public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
                          @Nonnull @Nonempty final String sPath,
