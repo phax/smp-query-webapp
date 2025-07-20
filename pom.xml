@@ -94,14 +94,14 @@
       <dependency>
         <groupId>com.helger.web</groupId>
         <artifactId>ph-web-parent-pom</artifactId>
-        <version>10.4.2</version>
+        <version>10.4.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.peppol</groupId>
         <artifactId>peppol-commons-parent-pom</artifactId>
-        <version>11.0.1</version>
+        <version>11.0.3</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
