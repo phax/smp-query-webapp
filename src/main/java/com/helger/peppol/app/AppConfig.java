@@ -16,14 +16,14 @@
  */
 package com.helger.peppol.app;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.UsedViaReflection;
-import com.helger.commons.debug.GlobalDebug;
+import com.helger.annotation.style.UsedViaReflection;
+import com.helger.base.debug.GlobalDebug;
 import com.helger.config.ConfigFactory;
 import com.helger.config.IConfig;
 import com.helger.scope.singleton.AbstractGlobalSingleton;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * This class provides access to the settings as contained in the

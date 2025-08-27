@@ -19,14 +19,10 @@ package com.helger.peppol.secure;
 import java.net.URL;
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.compare.ESortOrder;
-import com.helger.commons.string.StringHelper;
-import com.helger.commons.url.ISimpleURL;
-import com.helger.commons.url.URLHelper;
+import com.helger.annotation.Nonempty;
+import com.helger.base.compare.ESortOrder;
+import com.helger.base.string.StringHelper;
+import com.helger.base.url.URLHelper;
 import com.helger.html.hc.html.forms.HCCheckBox;
 import com.helger.html.hc.html.forms.HCEdit;
 import com.helger.html.hc.html.tabular.HCRow;
@@ -60,6 +56,10 @@ import com.helger.photon.uicore.page.EWebPageFormAction;
 import com.helger.photon.uicore.page.WebPageExecutionContext;
 import com.helger.photon.uictrls.datatables.DataTables;
 import com.helger.photon.uictrls.datatables.column.DTCol;
+import com.helger.url.ISimpleURL;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class PageSecureSMLConfiguration extends AbstractBootstrapWebPageForm <ISMLConfiguration, WebPageExecutionContext>
 {
@@ -259,7 +259,7 @@ public class PageSecureSMLConfiguration extends AbstractBootstrapWebPageForm <IS
     final boolean bProduction = aWPEC.params ().isCheckBoxChecked (FIELD_PRODUCTION, false);
 
     // validations
-    if (StringHelper.hasNoText (sID))
+    if (StringHelper.isEmpty (sID))
       aFormErrors.addFieldError (FIELD_ID, "The SML configuration ID must not be empty!");
     else
       if (ISMLConfigurationManager.ID_AUTO_DETECT.equals (sID))
@@ -283,13 +283,13 @@ public class PageSecureSMLConfiguration extends AbstractBootstrapWebPageForm <IS
         }
       }
 
-    if (StringHelper.hasNoText (sDisplayName))
+    if (StringHelper.isEmpty (sDisplayName))
       aFormErrors.addFieldError (FIELD_DISPLAY_NAME, "The SML configuration name must not be empty!");
 
-    if (StringHelper.hasNoText (sDNSZone))
+    if (StringHelper.isEmpty (sDNSZone))
       aFormErrors.addFieldError (FIELD_DNS_ZONE, "The DNS Zone must not be empty!");
 
-    if (StringHelper.hasNoText (sManagementAddressURL))
+    if (StringHelper.isEmpty (sManagementAddressURL))
       aFormErrors.addFieldError (FIELD_MANAGEMENT_ADDRESS_URL, "The Management Address URL must not be empty!");
     else
     {
@@ -302,13 +302,13 @@ public class PageSecureSMLConfiguration extends AbstractBootstrapWebPageForm <IS
                                      "The Management Address URL should only be use the 'http' or the 'https' protocol!");
     }
 
-    if (StringHelper.hasNoText (sSMPAPIType))
+    if (StringHelper.isEmpty (sSMPAPIType))
       aFormErrors.addFieldError (FIELD_SMP_API_TYPE, "An SMP API type must be selected!");
     else
       if (eSMPAPIType == null)
         aFormErrors.addFieldError (FIELD_SMP_API_TYPE, "A valid SMP API type must be selected!");
 
-    if (StringHelper.hasNoText (sSMPIdentifierType))
+    if (StringHelper.isEmpty (sSMPIdentifierType))
       aFormErrors.addFieldError (FIELD_SMP_ID_TYPE, "An SMP identifier type must be selected!");
     else
       if (eSMPIdentifierType == null)

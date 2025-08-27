@@ -16,8 +16,6 @@
  */
 package com.helger.peppol.servlet;
 
-import javax.annotation.Nonnull;
-
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.helger.commons.vendor.VendorInfo;
@@ -41,6 +39,7 @@ import com.helger.photon.core.appid.PhotonGlobalState;
 import com.helger.photon.core.locale.ILocaleManager;
 import com.helger.photon.core.menu.MenuTree;
 
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletContext;
 
 /**

@@ -16,9 +16,6 @@
  */
 package com.helger.peppol.domain;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.peppol.sml.ESMPAPIType;
 import com.helger.peppol.sml.SMLInfo;
 import com.helger.peppolid.factory.ESMPIdentifierType;
@@ -28,6 +25,9 @@ import com.helger.xml.microdom.MicroElement;
 import com.helger.xml.microdom.MicroQName;
 import com.helger.xml.microdom.convert.IMicroTypeConverter;
 import com.helger.xml.microdom.convert.MicroTypeConverter;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class SMLConfigurationMicroTypeConverter implements IMicroTypeConverter <SMLConfiguration>
 {
@@ -42,7 +42,7 @@ public final class SMLConfigurationMicroTypeConverter implements IMicroTypeConve
                                               @Nonnull final String sTagName)
   {
     final IMicroElement aElement = new MicroElement (sNamespaceURI, sTagName);
-    aElement.appendChild (MicroTypeConverter.convertToMicroElement (aObj.getSMLInfo (), sNamespaceURI, ELEMENT_SML_INFO));
+    aElement.addChild (MicroTypeConverter.convertToMicroElement (aObj.getSMLInfo (), sNamespaceURI, ELEMENT_SML_INFO));
     aElement.setAttribute (ATTR_SMP_API_TYPE, aObj.getSMPAPIType ().getID ());
     aElement.setAttribute (ATTR_SMP_IDENTIFIER_TYPE, aObj.getSMPIdentifierType ().getID ());
     aElement.setAttribute (ATTR_PRODUCTION, aObj.isProduction ());

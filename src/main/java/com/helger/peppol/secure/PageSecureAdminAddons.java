@@ -16,14 +16,11 @@
  */
 package com.helger.peppol.secure;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.mutable.MutableInt;
+import com.helger.annotation.Nonempty;
+import com.helger.base.numeric.mutable.MutableInt;
 import com.helger.html.hc.IHCNode;
 import com.helger.html.hc.impl.HCNodeList;
 import com.helger.photon.audit.AuditHelper;
@@ -36,6 +33,9 @@ import com.helger.photon.core.menu.IMenuTree;
 import com.helger.photon.uicore.css.CPageParam;
 import com.helger.photon.uicore.page.WebPageExecutionContext;
 import com.helger.photon.uicore.page.external.IWebPageResourceContent;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public final class PageSecureAdminAddons extends AbstractBootstrapWebPage <WebPageExecutionContext>
 {

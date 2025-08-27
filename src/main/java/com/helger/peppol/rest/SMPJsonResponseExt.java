@@ -18,9 +18,7 @@ package com.helger.peppol.rest;
 
 import java.util.Map;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
+import com.helger.annotation.concurrent.Immutable;
 import com.helger.json.IJson;
 import com.helger.json.IJsonArray;
 import com.helger.json.IJsonObject;
@@ -30,6 +28,8 @@ import com.helger.peppol.ui.AppCommonUI;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.smpclient.json.SMPJsonResponse;
+
+import jakarta.annotation.Nonnull;
 
 @Immutable
 public final class SMPJsonResponseExt

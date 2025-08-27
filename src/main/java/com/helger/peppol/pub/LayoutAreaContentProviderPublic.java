@@ -16,11 +16,6 @@
  */
 package com.helger.peppol.pub;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.url.ISimpleURL;
-import com.helger.commons.url.SimpleURL;
 import com.helger.html.hc.IHCNode;
 import com.helger.html.hc.html.grouping.HCDiv;
 import com.helger.html.hc.html.grouping.HCP;
@@ -44,6 +39,11 @@ import com.helger.photon.core.menu.IMenuObject;
 import com.helger.photon.core.menu.IMenuSeparator;
 import com.helger.photon.core.menu.IMenuTree;
 import com.helger.photon.core.menu.MenuItemDeterminatorCallback;
+import com.helger.url.ISimpleURL;
+import com.helger.url.SimpleURL;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * The viewport renderer (menu + content area)
@@ -66,7 +66,7 @@ public final class LayoutAreaContentProviderPublic
 
     final ISimpleURL aURL = new SimpleURL ("https://github.com/phax/smp-query-webapp");
     aNavbar.addAndReturnText ().addChild ("Latest version:").addClass (CBootstrapCSS.MR_2);
-    aNavbar.addBrand (new HCSpan ().addChild (aURL.getAsStringWithoutEncodedParameters ()), aURL);
+    aNavbar.addBrand (new HCSpan ().addChild (aURL.getAsString ()), aURL);
 
     return aNavbar;
   }

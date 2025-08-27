@@ -16,12 +16,12 @@
  */
 package com.helger.peppol.rest;
 
-import javax.annotation.Nonnull;
-
 import com.helger.photon.api.APIDescriptor;
 import com.helger.photon.api.APIPath;
 import com.helger.photon.api.IAPIExceptionMapper;
 import com.helger.photon.api.IAPIRegistry;
+
+import jakarta.annotation.Nonnull;
 
 public final class PPAPI
 {

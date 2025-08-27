@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.helger</groupId>
     <artifactId>parent-pom</artifactId>
-    <version>2.1.4</version>
+    <version>3.0.1</version>
   </parent>
   <artifactId>smp-query-webapp</artifactId>
   <version>1.0.0-SNAPSHOT</version>
@@ -65,6 +65,7 @@
     <m2e.jaxrs.activation>false</m2e.jaxrs.activation>
     <m2e.jpa.activation>false</m2e.jpa.activation>
     <m2e.jsf.activation>false</m2e.jsf.activation>
+    <dnsjava.version>3.6.3</dnsjava.version>
     <log4j.version>2.25.1</log4j.version>
   </properties>
   
@@ -73,42 +74,42 @@
       <dependency>
         <groupId>com.helger.commons</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
-        <version>11.2.6</version>
+        <version>12.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.masterdata</groupId>
         <artifactId>ph-masterdata-parent-pom</artifactId>
-        <version>7.0.2</version>
+        <version>8.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-css-parent-pom</artifactId>
-        <version>7.0.4</version>
+        <version>8.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.web</groupId>
         <artifactId>ph-web-parent-pom</artifactId>
-        <version>10.5.1</version>
+        <version>11.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.peppol</groupId>
         <artifactId>peppol-commons-parent-pom</artifactId>
-        <version>11.0.6</version>
+        <version>12.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>com.helger.photon</groupId>
-        <artifactId>ph-oton-parent-pom</artifactId>
-        <version>9.3.2</version>
+        <artifactId>ph-oton-bootstrap4-parent-pom</artifactId>
+        <version>10.0.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -138,10 +139,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.helger.commons</groupId>
-      <artifactId>ph-commons</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.helger.photon</groupId>
       <artifactId>ph-oton-bootstrap4-stub</artifactId>
     </dependency>
@@ -166,6 +163,7 @@
     <dependency>
       <groupId>dnsjava</groupId>
       <artifactId>dnsjava</artifactId>
+      <version>${dnsjava.version}</version>
     </dependency>
 
     <dependency>
@@ -189,6 +187,11 @@
       <artifactId>ph-oton-jetty</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.helger.commons</groupId>
+      <artifactId>ph-unittest-support-ext</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -208,14 +211,6 @@
     </resources>
     
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <configuration>
-          <doclint>none</doclint>
-          <source>8</source>
-        </configuration>
-      </plugin> 
-    </plugins>
+   </plugins>
   </build>
 </project>

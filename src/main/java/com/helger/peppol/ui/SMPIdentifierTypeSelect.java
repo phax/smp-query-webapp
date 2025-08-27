@@ -18,11 +18,11 @@ package com.helger.peppol.ui;
 
 import java.util.Locale;
 
-import javax.annotation.Nonnull;
-
 import com.helger.peppolid.factory.ESMPIdentifierType;
 import com.helger.photon.core.form.RequestField;
 import com.helger.photon.uicore.html.select.HCExtSelect;
+
+import jakarta.annotation.Nonnull;
 
 /**
  * UI select for SMP API types

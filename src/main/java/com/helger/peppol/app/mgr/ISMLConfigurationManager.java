@@ -18,17 +18,17 @@ package com.helger.peppol.app.mgr;
 
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.state.EChange;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.state.EChange;
+import com.helger.collection.commons.ICommonsList;
 import com.helger.peppol.domain.ISMLConfiguration;
 import com.helger.peppol.sml.ESMPAPIType;
 import com.helger.peppol.sml.ISMLInfo;
 import com.helger.peppolid.factory.ESMPIdentifierType;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Base interface for a manager that handles {@link ISMLInfo} objects.

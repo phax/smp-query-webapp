@@ -20,9 +20,6 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xbill.DNS.AAAARecord;
@@ -42,6 +39,9 @@ import com.helger.smpclient.url.BDXLURLProvider;
 import com.helger.smpclient.url.ISMPURLProvider;
 import com.helger.smpclient.url.PeppolConfigurableURLProvider;
 import com.helger.smpclient.url.SMPDNSResolutionException;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 /**
  * Extracted because used some times

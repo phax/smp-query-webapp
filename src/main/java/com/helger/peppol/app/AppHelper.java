@@ -16,10 +16,10 @@
  */
 package com.helger.peppol.app;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
+import com.helger.annotation.Nonempty;
+import com.helger.annotation.concurrent.Immutable;
 
-import com.helger.commons.annotation.Nonempty;
+import jakarta.annotation.Nonnull;
 
 /**
  * Misc utility methods

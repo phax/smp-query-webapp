@@ -18,9 +18,8 @@ package com.helger.peppol.app;
 
 import java.util.Locale;
 
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.locale.LocaleCache;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.text.locale.LocaleCache;
 
 /**
  * Contains application wide constants.

@@ -16,14 +16,12 @@
  */
 package com.helger.peppol.ui;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.CommonsHashMap;
-import com.helger.commons.collection.impl.ICommonsMap;
-import com.helger.commons.string.StringHelper;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.annotation.style.ReturnsMutableCopy;
+import com.helger.base.string.StringHelper;
+import com.helger.collection.commons.CommonsArrayList;
+import com.helger.collection.commons.CommonsHashMap;
+import com.helger.collection.commons.ICommonsMap;
 import com.helger.html.css.DefaultCSSClassProvider;
 import com.helger.html.css.ICSSClassProvider;
 import com.helger.html.jquery.JQueryAjaxBuilder;
@@ -42,6 +40,8 @@ import com.helger.photon.uictrls.datatables.ajax.AjaxExecutorDataTables;
 import com.helger.photon.uictrls.datatables.ajax.AjaxExecutorDataTablesI18N;
 import com.helger.photon.uictrls.datatables.plugins.DataTablesPluginSearchHighlight;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
+
+import jakarta.annotation.Nonnull;
 
 @Immutable
 public final class AppCommonUI

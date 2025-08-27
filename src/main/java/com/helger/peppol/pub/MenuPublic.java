@@ -16,12 +16,12 @@
  */
 package com.helger.peppol.pub;
 
-import javax.annotation.Nonnull;
-import javax.annotation.concurrent.Immutable;
-
-import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.annotation.concurrent.Immutable;
+import com.helger.io.resource.ClassPathResource;
 import com.helger.peppol.ui.AppPageViewExternal;
 import com.helger.photon.core.menu.IMenuTree;
+
+import jakarta.annotation.Nonnull;
 
 @Immutable
 public final class MenuPublic

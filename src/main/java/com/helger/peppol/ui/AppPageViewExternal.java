@@ -16,19 +16,19 @@
  */
 package com.helger.peppol.ui;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.io.resource.IReadableResource;
+import com.helger.annotation.Nonempty;
 import com.helger.html.EHTMLVersion;
 import com.helger.html.hc.IHCNode;
+import com.helger.io.resource.IReadableResource;
 import com.helger.photon.bootstrap4.pages.BootstrapWebPageUIHandler;
 import com.helger.photon.uicore.page.WebPageExecutionContext;
 import com.helger.photon.uicore.page.external.BasePageViewExternal;
 import com.helger.photon.uicore.page.external.PageViewExternalHTMLCleanser;
 import com.helger.xml.microdom.IMicroContainer;
 import com.helger.xml.microdom.util.MicroVisitor;
+
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 public class AppPageViewExternal extends BasePageViewExternal <WebPageExecutionContext>
 {

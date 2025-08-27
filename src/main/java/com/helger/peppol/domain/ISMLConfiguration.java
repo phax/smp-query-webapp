@@ -19,13 +19,13 @@ package com.helger.peppol.domain;
 import java.io.Serializable;
 import java.net.URL;
 
-import javax.annotation.Nonnull;
-
-import com.helger.commons.id.IHasID;
-import com.helger.commons.name.IHasDisplayName;
+import com.helger.base.id.IHasID;
+import com.helger.base.name.IHasDisplayName;
 import com.helger.peppol.sml.ESMPAPIType;
 import com.helger.peppol.sml.ISMLInfo;
 import com.helger.peppolid.factory.ESMPIdentifierType;
+
+import jakarta.annotation.Nonnull;
 
 public interface ISMLConfiguration extends IHasID <String>, IHasDisplayName, Serializable
 {
