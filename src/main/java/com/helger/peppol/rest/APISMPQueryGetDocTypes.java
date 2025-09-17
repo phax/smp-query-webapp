@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.annotation.Nonempty;
 import com.helger.base.CGlobal;
+import com.helger.base.string.StringHelper;
 import com.helger.base.timing.StopWatch;
 import com.helger.collection.commons.CommonsTreeMap;
 import com.helger.collection.commons.ICommonsSortedMap;
@@ -209,7 +210,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
       final SMPHttpClientSettings aHCS = new SMPHttpClientSettings ();
       SMP_HCS_MODIFIER.accept (aHCS);
 
-      final String sBCURL = aSMPQueryParams.getSMPHostURI ().toString () +
+      final String sBCURL = StringHelper.trimEnd (aSMPQueryParams.getSMPHostURI ().toString (), '/') +
                             "/businesscard/" +
                             aParticipantID.getURIEncoded ();
       LOGGER.info ("[API] Querying BC from '" + sBCURL + "'");

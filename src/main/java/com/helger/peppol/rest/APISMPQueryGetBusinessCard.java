@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.annotation.Nonempty;
 import com.helger.base.CGlobal;
+import com.helger.base.string.StringHelper;
 import com.helger.base.timing.StopWatch;
 import com.helger.datetime.helper.PDTFactory;
 import com.helger.http.CHttp;
@@ -124,7 +125,7 @@ public final class APISMPQueryGetBusinessCard extends AbstractAPIExecutor
                  aSML +
                  "'");
 
-    final String sBCURL = aSMPQueryParams.getSMPHostURI ().toString () +
+    final String sBCURL = StringHelper.trimEnd (aSMPQueryParams.getSMPHostURI ().toString (), '/') +
                           "/businesscard/" +
                           aParticipantID.getURIEncoded ();
     LOGGER.info (sLogPrefix + "Querying BC from '" + sBCURL + "'");
