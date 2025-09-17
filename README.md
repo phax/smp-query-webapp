@@ -22,6 +22,8 @@ This project is part of my Peppol solution stack. See https://github.com/phax/pe
 
 See https://peppol.helger.com/public/locale-en_US/menuitem-tools-rest-api for the full API description.
 
+Supported SML servers are only `digittest` (Peppol SMK) and `digitprod` (Peppol SML).
+
 ## Configuration parameters
 
 Default configuration is provided in file `src/main/resources/application.properties`.
