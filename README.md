@@ -7,6 +7,10 @@ This project is part of my Peppol solution stack. See https://github.com/phax/pe
 
 ## News and Noteworthy
 
+2025-09-17
+* Updated the truststore for the latest Directory TLS certs
+* Fixed a potential problem with DNS lookup results ending with '/'
+
 2025-07-21
 * Extended the truststore to contain Peppol PKI G3 CAs as well
 
@@ -17,6 +21,23 @@ This project is part of my Peppol solution stack. See https://github.com/phax/pe
 * SMP query the Business Card of a participant
 
 See https://peppol.helger.com/public/locale-en_US/menuitem-tools-rest-api for the full API description.
+
+## Configuration parameters
+
+Default configuration is provided in file `src/main/resources/application.properties`.
+Each property can be overridden via environment variables and Java system properties - see https://github.com/phax/ph-commons/wiki/ph-config for details.
+
+The default configuration should pretty much work out of the box.
+Supported properties are:
+
+* **`global.debug`**: global debug settings. Should always be `false`
+* **`global.production`**: global production mode. Should always be `true`. This has nothing to do with the Peppol stage.
+* **`webapp.datapath`**: where to store data. Does not need to be a persistent volume.
+* **`webapp.checkfileaccess`**: check file access on startup. Should always be `false`.
+* **`rest.log.exceptions`**: this property enables or disables the detailed logging of exceptions that occur while processing REST calls. By default the logging is disabled.
+* **`rest.exceptions.payload`**: this property enables or disables the provision of HTTP response contents in case of errors from the REST API. By default this is disabled. 
+
+SMP Client configuration properties as described on https://github.com/phax/peppol-commons/tree/master?tab=readme-ov-file#configuration
 
 ## Building from source
 

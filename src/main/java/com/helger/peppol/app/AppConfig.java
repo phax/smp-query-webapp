@@ -26,8 +26,8 @@ import jakarta.annotation.Nonnull;
 import jakarta.annotation.Nullable;
 
 /**
- * This class provides access to the settings as contained in the
- * <code>webapp.properties</code> file.
+ * This class provides access to the settings as contained in the <code>webapp.properties</code>
+ * file.
  *
  * @author Philip Helger
  */
@@ -68,11 +68,6 @@ public final class AppConfig extends AbstractGlobalSingleton
   public static boolean isCheckFileAccess ()
   {
     return getConfig ().getAsBoolean ("webapp.checkfileaccess", true);
-  }
-
-  public static boolean isTestVersion ()
-  {
-    return getConfig ().getAsBoolean ("webapp.testversion", GlobalDebug.isDebugMode ());
   }
 
   public static boolean isRestLogExceptions ()

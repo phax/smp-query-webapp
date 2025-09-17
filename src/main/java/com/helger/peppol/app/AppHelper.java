@@ -36,6 +36,6 @@ public final class AppHelper
   @Nonempty
   public static String getApplicationTitle ()
   {
-    return "SMP-QueryWebApp" + (AppConfig.isTestVersion () ? " [TEST]" : "");
+    return "SMP-QueryWebApp";
   }
 }
