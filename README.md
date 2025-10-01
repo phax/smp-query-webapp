@@ -7,6 +7,9 @@ This project is part of my Peppol solution stack. See https://github.com/phax/pe
 
 ## News and Noteworthy
 
+2025-10-01
+* Added new API `/api/is-in-peppol/{smlid}/{participantID}`
+
 2025-09-17
 * Updated the truststore for the latest Directory TLS certs
 * Fixed a potential problem with DNS lookup results ending with '/'
