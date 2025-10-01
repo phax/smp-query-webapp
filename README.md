@@ -5,6 +5,8 @@ This is the API subset parts from https://peppol.helger.com for standalone usage
 
 This project is part of my Peppol solution stack. See https://github.com/phax/peppol for other components and libraries in that area.
 
+A prebuild Docker image is available on Docker Hub as `phelger/smpqwa:latest` (for `linux/amd64`) and `phelger/smpqwa-arm64:latest` (for `linux/arm64`).
+
 ## News and Noteworthy
 
 2025-10-01
