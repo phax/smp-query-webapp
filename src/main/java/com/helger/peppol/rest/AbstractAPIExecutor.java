@@ -16,18 +16,62 @@
  */
 package com.helger.peppol.rest;
 
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.helger.annotation.Nonempty;
+import com.helger.base.timing.StopWatch;
+import com.helger.json.serialize.JsonWriterSettings;
+import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.api.IAPIExecutor;
+import com.helger.photon.app.PhotonUnifiedResponse;
+import com.helger.servlet.response.UnifiedResponse;
 import com.helger.smpclient.httpclient.SMPHttpClientSettings;
+import com.helger.web.scope.IRequestWebScopeWithoutResponse;
+
+import jakarta.annotation.Nonnull;
 
 public abstract class AbstractAPIExecutor implements IAPIExecutor
 {
-  protected static final String USER_AGENT = "SMP-Query-WebApp/1.0";
+  protected static final AtomicInteger COUNTER = new AtomicInteger (0);
+  protected static final String USER_AGENT = "phax-SMP-Query-WebApp/1.0 (https://github.com/phax/smp-query-webapp)";
   public static final Consumer <? super SMPHttpClientSettings> SMP_HCS_MODIFIER = hcs -> {
     hcs.setUserAgent (USER_AGENT);
   };
 
+  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractAPIExecutor.class);
+
   protected AbstractAPIExecutor ()
   {}
+
+  protected abstract void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                                     @Nonnull @Nonempty final String sPath,
+                                     @Nonnull final Map <String, String> aPathVariables,
+                                     @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
+                                     @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws Exception;
+
+  public final void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                               @Nonnull @Nonempty final String sPath,
+                               @Nonnull final Map <String, String> aPathVariables,
+                               @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
+                               @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
+  {
+    final StopWatch aSW = StopWatch.createdStarted ();
+
+    final PhotonUnifiedResponse aPUR = (PhotonUnifiedResponse) aUnifiedResponse;
+    aPUR.setJsonWriterSettings (JsonWriterSettings.DEFAULT_SETTINGS_FORMATTED);
+    invokeAPI (aAPIDescriptor, sPath, aPathVariables, aRequestScope, aPUR);
+
+    aSW.stop ();
+    if (aSW.getMillis () > 100)
+      LOGGER.info ("[API] Succesfully finished '" +
+                   aAPIDescriptor.getPathDescriptor ().getAsURLString () +
+                   "' after " +
+                   aSW.getMillis () +
+                   " milliseconds");
+  }
 }

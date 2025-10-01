@@ -19,6 +19,11 @@ This project is part of my Peppol solution stack. See https://github.com/phax/pe
 * SMP query all document types of a participant
 * SMP query all endpoints of a participant for a certain document type
 * SMP query the Business Card of a participant
+* Query if a Peppol Participant is registered in the DNS
+    * GET `/api/is-in-peppol/{smlid}/{participantID}`
+    * Response
+        * HTTP 200: is registered in Peppol Network
+        * HTTP 404: is not registered in Peppol Network
 
 See https://peppol.helger.com/public/locale-en_US/menuitem-tools-rest-api for the full API description.
 

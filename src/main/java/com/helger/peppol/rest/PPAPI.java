@@ -70,5 +70,16 @@ public final class PPAPI
       aSMPQueryBusinessCard.setExceptionMapper (aExceptionMapper);
       aAPIRegistry.registerAPI (aSMPQueryBusinessCard);
     }
+
+    {
+      final APIDescriptor aSMPQueryBusinessCard = new APIDescriptor (APIPath.get ("/is-in-peppol/{" +
+                                                                                  PARAM_SML_ID +
+                                                                                  "}/{" +
+                                                                                  PARAM_PARTICIPANT_ID +
+                                                                                  "}"),
+                                                                     new APICheckPeppolParticipantRegistered ());
+      aSMPQueryBusinessCard.setExceptionMapper (aExceptionMapper);
+      aAPIRegistry.registerAPI (aSMPQueryBusinessCard);
+    }
   }
 }

@@ -16,7 +16,6 @@
  */
 package com.helger.peppol.rest;
 
-import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
@@ -31,9 +30,7 @@ import com.helger.base.timing.StopWatch;
 import com.helger.datetime.helper.PDTFactory;
 import com.helger.http.CHttp;
 import com.helger.json.IJsonObject;
-import com.helger.json.serialize.JsonWriter;
-import com.helger.json.serialize.JsonWriterSettings;
-import com.helger.mime.CMimeType;
+import com.helger.peppol.app.CPPApp;
 import com.helger.peppol.app.mgr.ISMLConfigurationManager;
 import com.helger.peppol.app.mgr.PPMetaManager;
 import com.helger.peppol.domain.ISMLConfiguration;
@@ -42,7 +39,7 @@ import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.factory.SimpleIdentifierFactory;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.servlet.response.UnifiedResponse;
+import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
 import com.helger.smpclient.bdxr2.BDXR2ClientReadOnly;
 import com.helger.smpclient.json.SMPJsonResponse;
@@ -59,12 +56,14 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
   private static final Logger LOGGER = LoggerFactory.getLogger (APISMPQueryGetServiceInformation.class);
 
   @Override
-  public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                         @Nonnull @Nonempty final String sPath,
-                         @Nonnull final Map <String, String> aPathVariables,
-                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
+  protected void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                            @Nonnull @Nonempty final String sPath,
+                            @Nonnull final Map <String, String> aPathVariables,
+                            @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
+                            @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws Exception
   {
+    final String sLogPrefix = "[API GetSI-" + COUNTER.incrementAndGet () + "] ";
+
     final ISMLConfigurationManager aSMLConfigurationMgr = PPMetaManager.getSMLConfigurationMgr ();
     final String sSMLID = aPathVariables.get (PPAPI.PARAM_SML_ID);
     final boolean bSMLAutoDetect = ISMLConfigurationManager.ID_AUTO_DETECT.equals (sSMLID);
@@ -127,7 +126,8 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
     if (aDocTypeID == null)
       throw new APIParamException ("Invalid document type ID '" + sDocTypeID + "' provided.");
 
-    LOGGER.info ("[API] Participant information of '" +
+    LOGGER.info (sLogPrefix +
+                 "Participant information of '" +
                  aParticipantID.getURIEncoded () +
                  "' is queried using SMP API '" +
                  aSMPQueryParams.getSMPAPIType () +
@@ -148,13 +148,12 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
       case PEPPOL:
       {
         final SMPClientReadOnly aSMPClient = new SMPClientReadOnly (aSMPQueryParams.getSMPHostURI ());
-        aSMPClient.setSecureValidation (false);
+        aSMPClient.setSecureValidation (CPPApp.DEFAULT_SECURE_VALIDATION);
         aSMPClient.withHttpClientSettings (SMP_HCS_MODIFIER);
         aSMPClient.setXMLSchemaValidation (bXMLSchemaValidation);
         aSMPClient.setVerifySignature (bVerifySignature);
 
         final com.helger.xsds.peppol.smp1.SignedServiceMetadataType aSSM;
-        // PFUOI 4.3.0
         aSSM = aSMPClient.getSchemeSpecificServiceMetadataOrNull (aParticipantID, aDocTypeID);
         if (aSSM != null)
         {
@@ -166,7 +165,7 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
       case OASIS_BDXR_V1:
       {
         final BDXRClientReadOnly aBDXR1Client = new BDXRClientReadOnly (aSMPQueryParams.getSMPHostURI ());
-        aBDXR1Client.setSecureValidation (false);
+        aBDXR1Client.setSecureValidation (CPPApp.DEFAULT_SECURE_VALIDATION);
         aBDXR1Client.withHttpClientSettings (SMP_HCS_MODIFIER);
         aBDXR1Client.setXMLSchemaValidation (bXMLSchemaValidation);
         aBDXR1Client.setVerifySignature (bVerifySignature);
@@ -183,7 +182,7 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
       case OASIS_BDXR_V2:
       {
         final BDXR2ClientReadOnly aBDXR2Client = new BDXR2ClientReadOnly (aSMPQueryParams.getSMPHostURI ());
-        aBDXR2Client.setSecureValidation (false);
+        aBDXR2Client.setSecureValidation (CPPApp.DEFAULT_SECURE_VALIDATION);
         aBDXR2Client.withHttpClientSettings (SMP_HCS_MODIFIER);
         aBDXR2Client.setXMLSchemaValidation (bXMLSchemaValidation);
         aBDXR2Client.setVerifySignature (bVerifySignature);
@@ -202,20 +201,17 @@ public final class APISMPQueryGetServiceInformation extends AbstractAPIExecutor
 
     if (aJson == null)
     {
-      LOGGER.error ("[API] Failed to perform the SMP lookup");
+      LOGGER.error (sLogPrefix + "Failed to perform the SMP lookup");
       aUnifiedResponse.setStatus (CHttp.HTTP_NOT_FOUND);
     }
     else
     {
-      LOGGER.info ("[API] Succesfully finished lookup lookup after " + aSW.getMillis () + " milliseconds");
+      LOGGER.info (sLogPrefix + "Succesfully finished lookup lookup after " + aSW.getMillis () + " milliseconds");
 
       aJson.add ("queryDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
       aJson.add ("queryDurationMillis", aSW.getMillis ());
 
-      final String sRet = new JsonWriter (JsonWriterSettings.DEFAULT_SETTINGS_FORMATTED).writeAsString (aJson);
-      aUnifiedResponse.setContentAndCharset (sRet, StandardCharsets.UTF_8)
-                      .setMimeType (CMimeType.APPLICATION_JSON)
-                      .enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
+      aUnifiedResponse.json (aJson).enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
     }
   }
 }

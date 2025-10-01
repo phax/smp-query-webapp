@@ -38,9 +38,7 @@ import com.helger.httpclient.HttpClientManager;
 import com.helger.httpclient.response.ResponseHandlerByteArray;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
-import com.helger.json.serialize.JsonWriter;
-import com.helger.json.serialize.JsonWriterSettings;
-import com.helger.mime.CMimeType;
+import com.helger.peppol.app.CPPApp;
 import com.helger.peppol.app.mgr.ISMLConfigurationManager;
 import com.helger.peppol.app.mgr.PPMetaManager;
 import com.helger.peppol.businesscard.generic.PDBusinessCard;
@@ -51,7 +49,7 @@ import com.helger.peppolid.CIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.factory.SimpleIdentifierFactory;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.servlet.response.UnifiedResponse;
+import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
 import com.helger.smpclient.httpclient.SMPHttpClientSettings;
 import com.helger.smpclient.peppol.SMPClientReadOnly;
@@ -68,12 +66,14 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
   private static final Logger LOGGER = LoggerFactory.getLogger (APISMPQueryGetDocTypes.class);
 
   @Override
-  public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                         @Nonnull @Nonempty final String sPath,
-                         @Nonnull final Map <String, String> aPathVariables,
-                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
+  protected void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                            @Nonnull @Nonempty final String sPath,
+                            @Nonnull final Map <String, String> aPathVariables,
+                            @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
+                            @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws Exception
   {
+    final String sLogPrefix = "[API GetDT-" + COUNTER.incrementAndGet () + "] ";
+
     final ISMLConfigurationManager aSMLConfigurationMgr = PPMetaManager.getSMLConfigurationMgr ();
     final String sSMLID = aPathVariables.get (PPAPI.PARAM_SML_ID);
     final boolean bSMLAutoDetect = ISMLConfigurationManager.ID_AUTO_DETECT.equals (sSMLID);
@@ -126,8 +126,8 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
                                    "'");
 
     final IParticipantIdentifier aParticipantID = aSMPQueryParams.getParticipantID ();
-
-    LOGGER.info ("[API] Document types of '" +
+    LOGGER.info (sLogPrefix +
+                 "Document types of '" +
                  aParticipantID.getURIEncoded () +
                  "' are queried using SMP API '" +
                  aSMPQueryParams.getSMPAPIType () +
@@ -146,7 +146,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
       case PEPPOL:
       {
         final SMPClientReadOnly aSMPClient = new SMPClientReadOnly (aSMPQueryParams.getSMPHostURI ());
-        aSMPClient.setSecureValidation (false);
+        aSMPClient.setSecureValidation (CPPApp.DEFAULT_SECURE_VALIDATION);
         aSMPClient.withHttpClientSettings (SMP_HCS_MODIFIER);
         aSMPClient.setXMLSchemaValidation (bXMLSchemaValidation);
         aSMPClient.setVerifySignature (bVerifySignature);
@@ -163,7 +163,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
             // Decoded href is important for unification
             final String sHref = CIdentifier.createPercentDecoded (aSMR.getHref ());
             if (aSGHrefs.put (sHref, aSMR.getHref ()) != null)
-              LOGGER.warn ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'");
+              LOGGER.warn (sLogPrefix + "The ServiceGroup list contains the duplicate URL '" + sHref + "'");
           }
         }
         break;
@@ -172,7 +172,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
       {
         aSGHrefs = new CommonsTreeMap <> ();
         final BDXRClientReadOnly aBDXR1Client = new BDXRClientReadOnly (aSMPQueryParams.getSMPHostURI ());
-        aBDXR1Client.setSecureValidation (false);
+        aBDXR1Client.setSecureValidation (CPPApp.DEFAULT_SECURE_VALIDATION);
         aBDXR1Client.withHttpClientSettings (SMP_HCS_MODIFIER);
         aBDXR1Client.setXMLSchemaValidation (bXMLSchemaValidation);
         aBDXR1Client.setVerifySignature (bVerifySignature);
@@ -189,7 +189,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
             // Decoded href is important for unification
             final String sHref = CIdentifier.createPercentDecoded (aSMR.getHref ());
             if (aSGHrefs.put (sHref, aSMR.getHref ()) != null)
-              LOGGER.warn ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'");
+              LOGGER.warn (sLogPrefix + "The ServiceGroup list contains the duplicate URL '" + sHref + "'");
           }
         }
         break;
@@ -213,7 +213,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
       final String sBCURL = StringHelper.trimEnd (aSMPQueryParams.getSMPHostURI ().toString (), '/') +
                             "/businesscard/" +
                             aParticipantID.getURIEncoded ();
-      LOGGER.info ("[API] Querying BC from '" + sBCURL + "'");
+      LOGGER.info (sLogPrefix + "Querying BC from '" + sBCURL + "'");
       byte [] aData;
       try (HttpClientManager aHttpClientMgr = HttpClientManager.create (aHCS))
       {
@@ -226,13 +226,13 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
       }
 
       if (aData == null)
-        LOGGER.warn ("[API] No Business Card is available for that participant.");
+        LOGGER.warn (sLogPrefix + "No Business Card is available for that participant.");
       else
       {
         final PDBusinessCard aBC = PDBusinessCardHelper.parseBusinessCard (aData, StandardCharsets.UTF_8);
         if (aBC == null)
         {
-          LOGGER.error ("[API] Failed to parse BC:\n" + new String (aData));
+          LOGGER.error (sLogPrefix + "Failed to parse BC:\n" + new String (aData));
         }
         else
         {
@@ -248,20 +248,17 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
 
     if (aJson == null)
     {
-      LOGGER.error ("[API] Failed to perform the SMP lookup");
-      aUnifiedResponse.setStatus (CHttp.HTTP_NOT_FOUND);
+      LOGGER.error (sLogPrefix + "Failed to perform the SMP lookup");
+      aUnifiedResponse.createNotFound ();
     }
     else
     {
-      LOGGER.info ("[API] Succesfully finished lookup lookup after " + aSW.getMillis () + " milliseconds");
+      LOGGER.info (sLogPrefix + "Succesfully finished lookup lookup after " + aSW.getMillis () + " milliseconds");
 
       aJson.add ("queryDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
       aJson.add ("queryDurationMillis", aSW.getMillis ());
 
-      final String sRet = new JsonWriter (JsonWriterSettings.DEFAULT_SETTINGS_FORMATTED).writeAsString (aJson);
-      aUnifiedResponse.setContentAndCharset (sRet, StandardCharsets.UTF_8)
-                      .setMimeType (CMimeType.APPLICATION_JSON)
-                      .enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
+      aUnifiedResponse.json (aJson).enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
     }
   }
 }

@@ -35,9 +35,6 @@ import com.helger.http.CHttp;
 import com.helger.httpclient.HttpClientManager;
 import com.helger.httpclient.response.ResponseHandlerByteArray;
 import com.helger.json.IJsonObject;
-import com.helger.json.serialize.JsonWriter;
-import com.helger.json.serialize.JsonWriterSettings;
-import com.helger.mime.CMimeType;
 import com.helger.peppol.app.mgr.ISMLConfigurationManager;
 import com.helger.peppol.app.mgr.PPMetaManager;
 import com.helger.peppol.businesscard.generic.PDBusinessCard;
@@ -47,7 +44,7 @@ import com.helger.peppol.domain.SMPQueryParams;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.factory.SimpleIdentifierFactory;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.servlet.response.UnifiedResponse;
+import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.smpclient.httpclient.SMPHttpClientSettings;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
@@ -58,12 +55,14 @@ public final class APISMPQueryGetBusinessCard extends AbstractAPIExecutor
   private static final Logger LOGGER = LoggerFactory.getLogger (APISMPQueryGetBusinessCard.class);
 
   @Override
-  public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                         @Nonnull @Nonempty final String sPath,
-                         @Nonnull final Map <String, String> aPathVariables,
-                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
+  protected void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                            @Nonnull @Nonempty final String sPath,
+                            @Nonnull final Map <String, String> aPathVariables,
+                            @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
+                            @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws Exception
   {
+    final String sLogPrefix = "[API GetBC-" + COUNTER.incrementAndGet () + "] ";
+
     final ISMLConfigurationManager aSMLConfigurationMgr = PPMetaManager.getSMLConfigurationMgr ();
     final String sSMLID = aPathVariables.get (PPAPI.PARAM_SML_ID);
     final boolean bSMLAutoDetect = ISMLConfigurationManager.ID_AUTO_DETECT.equals (sSMLID);
@@ -112,7 +111,6 @@ public final class APISMPQueryGetBusinessCard extends AbstractAPIExecutor
                                    "'");
 
     final IParticipantIdentifier aParticipantID = aSMPQueryParams.getParticipantID ();
-    final String sLogPrefix = "[API] ";
 
     LOGGER.info (sLogPrefix +
                  "BusinessCard of '" +
@@ -165,20 +163,20 @@ public final class APISMPQueryGetBusinessCard extends AbstractAPIExecutor
 
     if (aBCJson == null)
     {
-      LOGGER.error ("[API] Failed to perform the BusinessCard SMP lookup");
-      aUnifiedResponse.setStatus (CHttp.HTTP_NOT_FOUND);
+      LOGGER.error (sLogPrefix + "Failed to perform the BusinessCard SMP lookup");
+      aUnifiedResponse.createNotFound ();
     }
     else
     {
-      LOGGER.info ("[API] Succesfully finished BusinessCard lookup lookup after " + aSW.getMillis () + " milliseconds");
+      LOGGER.info (sLogPrefix +
+                   "Succesfully finished BusinessCard lookup lookup after " +
+                   aSW.getMillis () +
+                   " milliseconds");
 
       aBCJson.add ("queryDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
       aBCJson.add ("queryDurationMillis", aSW.getMillis ());
 
-      final String sRet = new JsonWriter (JsonWriterSettings.DEFAULT_SETTINGS_FORMATTED).writeAsString (aBCJson);
-      aUnifiedResponse.setContentAndCharset (sRet, StandardCharsets.UTF_8)
-                      .setMimeType (CMimeType.APPLICATION_JSON)
-                      .enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
+      aUnifiedResponse.json (aBCJson).enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
     }
   }
 }

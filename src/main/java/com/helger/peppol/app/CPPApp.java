@@ -31,6 +31,7 @@ public final class CPPApp
 {
   public static final Locale LOCALE_EN = LocaleCache.getInstance ().getLocale ("en", "US");
   public static final Locale DEFAULT_LOCALE = LOCALE_EN;
+  public static final boolean DEFAULT_SECURE_VALIDATION = true;
 
   private CPPApp ()
   {}
