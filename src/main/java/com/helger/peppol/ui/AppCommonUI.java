@@ -42,6 +42,7 @@ import com.helger.photon.uictrls.datatables.plugins.DataTablesPluginSearchHighli
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 
 @Immutable
 public final class AppCommonUI
@@ -117,5 +118,11 @@ public final class AppCommonUI
   public static ICommonsMap <String, NiceNameEntry> getDocTypeNames ()
   {
     return DOCTYPE_NAMES.getClone ();
+  }
+
+  @Nullable
+  public static NiceNameEntry getDocTypeName (@Nullable final String sName)
+  {
+    return DOCTYPE_NAMES.get (sName);
   }
 }

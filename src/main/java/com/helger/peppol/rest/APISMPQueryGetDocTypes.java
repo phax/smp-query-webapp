@@ -45,8 +45,10 @@ import com.helger.peppol.businesscard.generic.PDBusinessCard;
 import com.helger.peppol.businesscard.helper.PDBusinessCardHelper;
 import com.helger.peppol.domain.ISMLConfiguration;
 import com.helger.peppol.domain.SMPQueryParams;
+import com.helger.peppol.sml.ESMPAPIType;
 import com.helger.peppolid.CIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
+import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.peppolid.factory.SimpleIdentifierFactory;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.app.PhotonUnifiedResponse;
@@ -86,13 +88,6 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
     if (aPID == null)
       throw new APIParamException ("Invalid participant ID '" + sParticipantID + "' provided.");
 
-    final boolean bQueryBusinessCard = aRequestScope.params ().getAsBoolean (PARAM_BUSINESS_CARD, false);
-    final boolean bXMLSchemaValidation = aRequestScope.params ().getAsBoolean (PARAM_XML_SCHEMA_VALIDATION, true);
-    final boolean bVerifySignature = aRequestScope.params ().getAsBoolean (PARAM_VERIFY_SIGNATURE, true);
-
-    final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
-    final StopWatch aSW = StopWatch.createdStarted ();
-
     SMPQueryParams aSMPQueryParams = null;
     if (bSMLAutoDetect)
     {
@@ -125,12 +120,22 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
                                    aSML.getID () +
                                    "'");
 
+    final boolean bQueryBusinessCard = aRequestScope.params ().getAsBoolean (PARAM_BUSINESS_CARD, false);
+    final boolean bXMLSchemaValidation = aRequestScope.params ().getAsBoolean (PARAM_XML_SCHEMA_VALIDATION, true);
+    final boolean bVerifySignature = aRequestScope.params ().getAsBoolean (PARAM_VERIFY_SIGNATURE, true);
+
+    final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
+    final StopWatch aSW = StopWatch.createdStarted ();
+
     final IParticipantIdentifier aParticipantID = aSMPQueryParams.getParticipantID ();
+    final IIdentifierFactory aIF = aSMPQueryParams.getIF ();
+    final ESMPAPIType eAPIType = aSMPQueryParams.getSMPAPIType ();
+
     LOGGER.info (sLogPrefix +
                  "Document types of '" +
                  aParticipantID.getURIEncoded () +
                  "' are queried using SMP API '" +
-                 aSMPQueryParams.getSMPAPIType () +
+                 eAPIType +
                  "' from '" +
                  aSMPQueryParams.getSMPHostURI () +
                  "' using SML '" +
@@ -141,7 +146,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
                  bVerifySignature);
 
     ICommonsSortedMap <String, String> aSGHrefs = null;
-    switch (aSMPQueryParams.getSMPAPIType ())
+    switch (eAPIType)
     {
       case PEPPOL:
       {
@@ -199,10 +204,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
     IJsonObject aJson = null;
     if (aSGHrefs != null)
     {
-      aJson = SMPJsonResponseExt.convert (aSMPQueryParams.getSMPAPIType (),
-                                          aParticipantID,
-                                          aSGHrefs,
-                                          aSMPQueryParams.getIF ());
+      aJson = SMPJsonResponseExt.convert (eAPIType, aParticipantID, aSGHrefs, aIF);
     }
 
     if (bQueryBusinessCard)
@@ -214,8 +216,9 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
                             "/businesscard/" +
                             aParticipantID.getURIEncoded ();
       LOGGER.info (sLogPrefix + "Querying BC from '" + sBCURL + "'");
+
       byte [] aData;
-      try (HttpClientManager aHttpClientMgr = HttpClientManager.create (aHCS))
+      try (final HttpClientManager aHttpClientMgr = HttpClientManager.create (aHCS))
       {
         final HttpGet aGet = new HttpGet (sBCURL);
         aData = aHttpClientMgr.execute (aGet, new ResponseHandlerByteArray ());
@@ -226,13 +229,15 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
       }
 
       if (aData == null)
+      {
         LOGGER.warn (sLogPrefix + "No Business Card is available for that participant.");
+      }
       else
       {
         final PDBusinessCard aBC = PDBusinessCardHelper.parseBusinessCard (aData, StandardCharsets.UTF_8);
         if (aBC == null)
         {
-          LOGGER.error (sLogPrefix + "Failed to parse BC:\n" + new String (aData));
+          LOGGER.error (sLogPrefix + "Failed to parse BC:\n" + new String (aData, StandardCharsets.UTF_8));
         }
         else
         {
@@ -258,7 +263,7 @@ public final class APISMPQueryGetDocTypes extends AbstractAPIExecutor
       aJson.add ("queryDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
       aJson.add ("queryDurationMillis", aSW.getMillis ());
 
-      aUnifiedResponse.json (aJson).enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
+      aUnifiedResponse.json (aJson).enableCaching (1 * CGlobal.SECONDS_PER_HOUR);
     }
   }
 }

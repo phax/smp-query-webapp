@@ -19,7 +19,6 @@ package com.helger.peppol.rest;
 import java.util.Map;
 
 import com.helger.annotation.concurrent.Immutable;
-import com.helger.json.IJson;
 import com.helger.json.IJsonArray;
 import com.helger.json.IJsonObject;
 import com.helger.peppol.domain.NiceNameEntry;
@@ -47,25 +46,26 @@ public final class SMPJsonResponseExt
                                      @Nonnull final Map <String, String> aSGHrefs,
                                      @Nonnull final IIdentifierFactory aIF)
   {
+    // Main conversion
     final IJsonObject aJson = SMPJsonResponse.convert (eSMPAPIType, aParticipantID, aSGHrefs, aIF);
+
+    // Add nice names from code list
     final IJsonArray aURLsArray = aJson.getAsArray (SMPJsonResponse.JSON_URLS);
     if (aURLsArray != null)
-      for (final IJson aEntry : aURLsArray)
-        if (aEntry.isObject ())
+      for (final IJsonObject aUrlEntry : aURLsArray.iteratorObjects ())
+      {
+        final String sDocType = aUrlEntry.getAsString (SMPJsonResponse.JSON_DOCUMENT_TYPE_ID);
+        if (sDocType != null)
         {
-          final IJsonObject aUrlEntry = aEntry.getAsObject ();
-          final String sDocType = aUrlEntry.getAsString (SMPJsonResponse.JSON_DOCUMENT_TYPE_ID);
-          if (sDocType != null)
+          final NiceNameEntry aNN = AppCommonUI.getDocTypeName (sDocType);
+          if (aNN != null)
           {
-            final NiceNameEntry aNN = AppCommonUI.getDocTypeNames ().get (sDocType);
-            if (aNN != null)
-            {
-              aUrlEntry.add (JSON_NICE_NAME, aNN.getName ());
-              aUrlEntry.add (JSON_STATE, aNN.getState ().getID ());
-              aUrlEntry.add (JSON_IS_DEPRECATED, aNN.getState ().isDeprecated ());
-            }
+            aUrlEntry.add (JSON_NICE_NAME, aNN.getName ());
+            aUrlEntry.add (JSON_STATE, aNN.getState ().getID ());
+            aUrlEntry.add (JSON_IS_DEPRECATED, aNN.getState ().isDeprecated ());
           }
         }
+      }
     return aJson;
   }
 }
